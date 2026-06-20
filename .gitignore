@@ -1,0 +1,23 @@
+# Xcode / xcodegen
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+build/
+.build/
+*.xcuserstate
+
+# SPM
+.swiftpm/
+
+# macOS
+.DS_Store
+
+# Evaluation artifacts (do not commit large binaries / generated output)
+Models/
+Output/
+Corpus/*.wav
+Corpus/*.m4a
+Corpus/*.mp3
+Corpus/*.caf
+Corpus/*.aiff
