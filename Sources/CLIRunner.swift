@@ -5,7 +5,7 @@ import Foundation
 enum CLIRunner {
     static func run(path: String, engineName: String?, lang: String?) async {
         let url = URL(fileURLWithPath: path)
-        let engines: [TranscriptionEngine] = [AppleSpeechEngine(), MockEngine()]
+        let engines: [TranscriptionEngine] = [AppleSpeechEngine(), WhisperKitEngine(), MockEngine()]
         let key = (engineName ?? "apple").lowercased()
         let engine = engines.first { $0.name.lowercased().contains(key) } ?? engines[0]
 

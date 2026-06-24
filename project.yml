@@ -9,12 +9,18 @@ settings:
     SWIFT_VERSION: "5"
     MARKETING_VERSION: "0.1"
     CURRENT_PROJECT_VERSION: "1"
+packages:
+  WhisperKit:
+    url: https://github.com/argmaxinc/WhisperKit
+    from: "1.0.0"
 targets:
   LocalMeetingTranscriber:
     type: application
     platform: macOS
     sources:
       - path: Sources
+    dependencies:
+      - package: WhisperKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.localmeetingtranscriber.app

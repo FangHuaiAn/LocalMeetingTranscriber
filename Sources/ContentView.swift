@@ -14,9 +14,9 @@ final class TestbedViewModel: ObservableObject {
     @Published var result: TranscriptionResult?
     @Published var exportDir: URL?
 
-    /// Phase 3–4 會把其餘 engine 加入此清單。
-    let engines: [TranscriptionEngine] = [AppleSpeechEngine(), MockEngine()]
-    let pendingEngines = ["WhisperKit（Phase 3）", "whisper.cpp（Phase 4）"]
+    /// Phase 4 會把 whisper.cpp 加入此清單。
+    let engines: [TranscriptionEngine] = [AppleSpeechEngine(), WhisperKitEngine(), MockEngine()]
+    let pendingEngines = ["whisper.cpp（Phase 4）"]
 
     init() {
         selectedEngineName = engines[0].name
