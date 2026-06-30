@@ -21,3 +21,6 @@ Corpus/*.m4a
 Corpus/*.mp3
 Corpus/*.caf
 Corpus/*.aiff
+
+# whisper.cpp build artifacts
+vendor/

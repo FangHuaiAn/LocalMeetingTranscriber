@@ -32,3 +32,31 @@ targets:
         INFOPLIST_KEY_NSSpeechRecognitionUsageDescription: "需要語音辨識以進行本地端轉錄測試。"
         INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.developer-tools"
         INFOPLIST_KEY_LSMinimumSystemVersion: "26.0"
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/Whisper-Bridging-Header.h
+        HEADER_SEARCH_PATHS:
+          - $(SRCROOT)/vendor/whisper/include
+        LIBRARY_SEARCH_PATHS:
+          - $(SRCROOT)/vendor/whisper/lib
+        OTHER_LDFLAGS:
+          - -lc++
+          - -framework
+          - Metal
+          - -framework
+          - MetalKit
+          - -framework
+          - Accelerate
+          - -framework
+          - Foundation
+          - -force_load
+          - $(SRCROOT)/vendor/whisper/lib/libwhisper.a
+          - -force_load
+          - $(SRCROOT)/vendor/whisper/lib/libggml.a
+          - -force_load
+          - $(SRCROOT)/vendor/whisper/lib/libggml-base.a
+          - -force_load
+          - $(SRCROOT)/vendor/whisper/lib/libggml-cpu.a
+          - -force_load
+          - $(SRCROOT)/vendor/whisper/lib/libggml-metal.a
+          - -force_load
+          - $(SRCROOT)/vendor/whisper/lib/libggml-blas.a
+          - $(SRCROOT)/vendor/whisper/lib/libparakeet.a

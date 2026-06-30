@@ -33,6 +33,14 @@ enum AudioPipeline {
     }
 
     static func normalize(_ sourceURL: URL) throws -> NormalizedAudio {
+        let samples = try self.samples(from: sourceURL)
+        let duration = Double(samples.count) / targetSampleRate
+        let url = try writeWAV(samples, sourceName: sourceURL.deletingPathExtension().lastPathComponent)
+        return NormalizedAudio(url: url, samples: samples, duration: duration, sampleRate: targetSampleRate)
+    }
+
+    /// 把任意音檔讀成 16kHz、mono、Float32 樣本（不落地）。whisper.cpp 直接吃這個。
+    static func samples(from sourceURL: URL) throws -> [Float] {
         let file = try AVAudioFile(forReading: sourceURL)
         let inFormat = file.processingFormat
 
@@ -102,15 +110,11 @@ enum AudioPipeline {
             }
         }
 
-        samples = optionalNoisePreprocess(samples)
-        let duration = Double(samples.count) / targetSampleRate
-        let url = try writeWAV(samples, format: outFormat, sourceName: sourceURL.deletingPathExtension().lastPathComponent)
-
-        return NormalizedAudio(url: url, samples: samples, duration: duration, sampleRate: targetSampleRate)
+        return optionalNoisePreprocess(samples)
     }
 
     /// 寫出 16-bit PCM WAV（廣相容），供需要 URL 的 engine 與時間軸校對使用。
-    private static func writeWAV(_ samples: [Float], format: AVAudioFormat, sourceName: String) throws -> URL {
+    private static func writeWAV(_ samples: [Float], sourceName: String) throws -> URL {
         let dir = FileManager.default.temporaryDirectory
         let url = dir.appendingPathComponent("\(sourceName)-16k-mono.wav")
 
@@ -126,7 +130,8 @@ enum AudioPipeline {
 
         let outFile = try AVAudioFile(forWriting: url, settings: settings)
 
-        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(max(samples.count, 1))) else {
+        guard let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: targetSampleRate, channels: 1, interleaved: false),
+              let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(max(samples.count, 1))) else {
             throw AudioPipelineError.converterInit
         }
         buffer.frameLength = AVAudioFrameCount(samples.count)
